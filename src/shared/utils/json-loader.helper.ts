@@ -1,38 +1,21 @@
-interface ABIItem {
-  name?: string;
-  type?: string;
-  // Otros posibles campos que puedan existir en la definición de ABI
-}
-
-interface ContractData {
-  abi: ABIItem[];
-  // Otros posibles campos en el archivo JSON
-}
-
-import contractServicesManager from '../../features/contracts/abi/contracts.json';
-
-const contractServices: ContractData = contractServicesManager;
+// Importar solo los contratos que estás usando actualmente
+// import * as contractAccessControl from '../../features/contracts/abi/AccessControl.json';
+// import * as contractServiceAgreement from '../../features/contracts/abi/ServiceAgreement.json';
+import * as contractServiceManager from '../../features/contracts/abi/ServiceManager.json';
 
 export const loadJSON = (): any => {
   const contracts = {
-    contractServices: contractServices.abi,
+    serviceManager: contractServiceManager.abi, // Usar nombres consistentes
   };
 
-  const printAbiNames = (contractAbi: ABIItem[]) => {
-    if (!contractAbi || !Array.isArray(contractAbi)) {
-      console.error('Error: ABI no encontrado o no es una lista.');
-      return;
+  // Verificar si cada ABI está correctamente cargada
+  Object.entries(contracts).forEach(([key, value]) => {
+    if (!value) {
+      console.error(`Error: ABI para ${key} no está definida o no se pudo cargar.`);
+    } else {
+      console.log(`ABI cargada correctamente para ${key}`);
     }
-    
-    contractAbi.forEach(item => {
-      if (item.name) {
-        console.log(`Nombre: ${item.name}`);
-      }
-    });
-  };
-
-  console.log('ABIS:');
-  printAbiNames(contracts.contractServices);
+  });
 
   return contracts;
 };

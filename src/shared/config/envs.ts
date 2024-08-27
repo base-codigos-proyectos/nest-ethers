@@ -8,6 +8,9 @@ interface EnvVars {
   JWT_SECRET: string;
   ETH_RPC_URL: string;
   CONTRACT_ADDRESS: string;
+  PRIVATE_KEY: string;
+  ServiceManager: string;
+  ServiceAgreement:string
 
 
 }
@@ -15,6 +18,10 @@ interface EnvVars {
 const envsSchema = joi
   .object({
     PORT: joi.number().required(),
+    ETH_RPC_URL: joi.string().required(),
+    PRIVATE_KEY:joi.string().required(),
+    ServiceManager:joi.string().required(),
+    ServiceAgreement:joi.string().required()
    
 
   })
@@ -32,6 +39,9 @@ const envVars: EnvVars = value;
 
 export const envs = {
   port: envVars.PORT,
-
+  ETH_RPC_URL:envVars.ETH_RPC_URL,
+  PRIVATE_KEY:envVars.PRIVATE_KEY,
+  ServiceManager:envVars.ServiceManager,
+  ServiceAgreement:envVars.ServiceAgreement
 
 };

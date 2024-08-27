@@ -5,25 +5,25 @@ import { ContractsService } from './contracts.service';
 export class ContractsController {
   constructor(private readonly contractsService: ContractsService) {}
 
-  @Get('signer-address')
-  async getSignerAddress(): Promise<string> {
-    const address = await this.contractsService.getSignerAddress();
-    console.log('Signer Address:', address);
-    return address;
-  }
+  // @Get('signer-address')
+  // async getSignerAddress(): Promise<string> {
+  //   const address = await this.contractsService.getSignerAddress();
+  //   console.log('Signer Address:', address);
+  //   return address;
+  // }
 
-  @Get('balance')
-  async getBalance(): Promise<string> {
-    return this.contractsService.getBalance();
-  }
+  // @Get('balance')
+  // async getBalance(): Promise<string> {
+  //   return this.contractsService.getBalance();
+  // }
 
-  @Post('create-service-provider')
-  async createNewServiceProvider(@Body('companyName') companyName: string) {
-    return await this.contractsService.createNewServiceProvider(companyName);
-  }
+  // @Post('create-service-provider')
+  // async createNewServiceProvider(@Body('companyName') companyName: string) {
+  //   return await this.contractsService.createNewServiceProvider(companyName);
+  // }
 
-  @Get('service-providers')
-  async getServiceProviders(): Promise<string[]> {
-    return await this.contractsService.getServiceProviders();
-  }
+  // @Get('service-providers')
+  // async getServiceProviders(): Promise<string[]> {
+  //   return await this.contractsService.getServiceProviders();
+  // }
 }

@@ -20,7 +20,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .addBearerAuth()
-    .setTitle('API WHILABELL')
+    .setTitle('API')
     .setDescription('DESCRPCION')
     .addTag('auth')
     .build();
