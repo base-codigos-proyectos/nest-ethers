@@ -10,6 +10,8 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule, {
     cors: true,
+    rawBody:true
+
   });
   app.use(json({ limit: '60mb' }));
 
@@ -17,6 +19,14 @@ async function bootstrap() {
     defaultVersion: '1',
     type: VersioningType.URI,
   });
+
+  app.enableCors({
+    origin: 'http://localhost:3000', 
+    methods: ['GET', 'POST','PUT','DELETE','OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  });
+
 
   const config = new DocumentBuilder()
     .addBearerAuth()

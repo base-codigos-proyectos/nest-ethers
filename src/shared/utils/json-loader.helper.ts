@@ -2,10 +2,12 @@
 // import * as contractAccessControl from '../../features/contracts/abi/AccessControl.json';
 // import * as contractServiceAgreement from '../../features/contracts/abi/ServiceAgreement.json';
 import * as contractServiceManager from '../../features/contracts/abi/ServiceManager.json';
+import * as contractServiceAgreement from '../../features/contracts/abi/ServiceAgreement.json';
 
 export const loadJSON = (): any => {
   const contracts = {
     serviceManager: contractServiceManager.abi, // Usar nombres consistentes
+    serviceAgreement: contractServiceAgreement.abi, // Usar nombres consistentes
   };
 
   // Verificar si cada ABI está correctamente cargada
