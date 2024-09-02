@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ContractsService } from '../contracts/contracts.service';
 import { CreateServiceProviderDto } from './dto/create-service-provider.dto';
 import { ethers } from 'ethers';
@@ -9,26 +9,80 @@ import { ethers } from 'ethers';
 export class ProviderService {
   constructor(private readonly contractsService: ContractsService) {}
 
+  // async createNewServiceProvider(dto: CreateServiceProviderDto): Promise<any> {
+  //   try {
+  //     const { companyName, email, phone, serviceAmount, serviceCategory } = dto;
+  //     const serviceManagerContract = this.contractsService.getContract('serviceManager'); // Obtener el contrato
+
+  //     const transaction = await serviceManagerContract.createNewServiceProvider(
+  //       companyName,
+  //       email,
+  //       phone,
+  //       ethers.utils.parseEther(serviceAmount.toString()), 
+  //       serviceCategory
+  //     );
+  //     await transaction.wait();
+  //     console.log('ServiceProvider creado:', transaction);
+  //     return transaction;
+  //   } catch (error) {
+  //     console.error('Error creando el proveedor de servicios:', error);
+  //     throw error;
+  //   }
+  // }
+
   async createNewServiceProvider(dto: CreateServiceProviderDto): Promise<any> {
     try {
       const { companyName, email, phone, serviceAmount, serviceCategory } = dto;
-      const serviceManagerContract = this.contractsService.getContract('serviceManager'); // Obtener el contrato
+      const serviceManagerContract = this.contractsService.getContract('serviceManager');
 
       const transaction = await serviceManagerContract.createNewServiceProvider(
         companyName,
         email,
         phone,
-        ethers.utils.parseEther(serviceAmount.toString()), // Asegúrate de importar ethers aquí
+        ethers.utils.parseEther(serviceAmount.toString()), // Convertir el monto a formato adecuado
         serviceCategory
       );
+
       await transaction.wait();
       console.log('ServiceProvider creado:', transaction);
       return transaction;
     } catch (error) {
       console.error('Error creando el proveedor de servicios:', error);
-      throw error;
+
+      // Manejo específico de errores de Ethers.js
+      if (error.code) {
+        switch (error.code) {
+          case 'INSUFFICIENT_FUNDS':
+            throw new HttpException(
+              'Fondos insuficientes para realizar esta transacción.',
+              HttpStatus.BAD_REQUEST,
+            );
+          case 'NETWORK_ERROR':
+            throw new HttpException(
+              'Error de red al intentar interactuar con el contrato.',
+              HttpStatus.SERVICE_UNAVAILABLE,
+            );
+          case 'UNPREDICTABLE_GAS_LIMIT':
+            throw new HttpException(
+              'Límite de gas impredecible, la transacción puede fallar.',
+              HttpStatus.BAD_REQUEST,
+            );
+          default:
+            throw new HttpException(
+              'Error desconocido al crear el proveedor de servicios.',
+              HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+        }
+      }
+
+      // Manejo de otros errores genéricos
+      throw new HttpException(
+        'Error al crear el proveedor de servicios. Por favor, inténtalo de nuevo.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
+
 
 
    async getAllServiceProviders(): Promise<any> {
